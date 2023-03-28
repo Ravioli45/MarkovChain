@@ -14,11 +14,11 @@ impl MarkovChain<'_>{
 
         for p in probabilities{
             if p.iter().sum::<f64>() != 1.0{
-                panic!("Probabilities do not add to one")
+                panic!("Probabilities do not add to one");
             }
         }
         if states.len() != probabilities.len(){
-            panic!("Mismatched number of states and labels")
+            panic!("Mismatched number of states and labels");
         }
         
         //TODO check validity of probability vectors

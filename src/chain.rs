@@ -6,12 +6,11 @@ pub struct MarkovChain<'a>{
     rng: ThreadRng,
     u_dist: Uniform<f64>,
     state_probs: &'a[&'a[f64]],
-    state_labels: Vec<String>,
+    state_labels: &'a[&'a str],
     state: usize
-    
 }
 impl MarkovChain<'_>{
-    pub fn new<'a>(probabilities: &'a[&'a[f64]], states: Vec<String>) -> MarkovChain<'a>{
+    pub fn new<'a>(probabilities: &'a[&'a[f64]], states: &'a[&'a str]) -> MarkovChain<'a>{
 
         for p in probabilities{
             if p.iter().sum::<f64>() != 1.0{
@@ -41,11 +40,11 @@ impl MarkovChain<'_>{
         self.u_dist.sample(&mut self.rng)
     }
     
-    pub fn current_state(&self) -> &String{
-        &self.state_labels[self.state]
+    pub fn current_state(&self) -> &str{
+        self.state_labels[self.state]
     }
     
-    pub fn next_state(&mut self) -> &String{
+    pub fn next_state(&mut self) -> &str{
 
         let r: f64 = self.random();
         let current_prob: &[f64] = self.state_probs[self.state];
@@ -70,6 +69,6 @@ impl MarkovChain<'_>{
             
         }
         
-        &self.state_labels[self.state]
+        self.state_labels[self.state]
     }
 }

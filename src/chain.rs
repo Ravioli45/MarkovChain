@@ -1,19 +1,19 @@
 use rand::distributions::{Uniform, Distribution};
 use rand::rngs::ThreadRng;
 
-pub struct MarkovChain{
+pub struct MarkovChain<'a>{
 
     rng: ThreadRng,
     u_dist: Uniform<f64>,
-    state_probs: Vec<Vec<f64>>,
+    state_probs: &'a[&'a[f64]],
     state_labels: Vec<String>,
     state: usize
     
 }
-impl MarkovChain{
-    pub fn new(probabilities: Vec<Vec<f64>>, states: Vec<String>) -> MarkovChain{
+impl MarkovChain<'_>{
+    pub fn new<'a>(probabilities: &'a[&'a[f64]], states: Vec<String>) -> MarkovChain<'a>{
 
-        for p in &probabilities{
+        for p in probabilities{
             if p.iter().sum::<f64>() != 1.0{
                 panic!("Probabilities do not add to one")
             }
@@ -48,7 +48,7 @@ impl MarkovChain{
     pub fn next_state(&mut self) -> &String{
 
         let r: f64 = self.random();
-        let current_prob: &Vec<f64> = &(self.state_probs[self.state]);
+        let current_prob: &[f64] = self.state_probs[self.state];
         //let r: f64 = self.random();
 
         //let mut i: usize = 0;
